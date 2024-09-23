@@ -44,6 +44,59 @@ app.MapPost("/usuario", ([FromBody] Usuario usuario) => {
     return Results.Created($"/usuario/{usuario.IdUsuario}", usuario);
 });
 
-// 
+// Leer usuarios
+
+// 1. Leer todos los usuarios
+app.MapGet("/usuarios", () =>
+{
+    return Results.Ok(usuarios);
+})
+    .WithTags("Usuario");
+
+// 2. Leer usuario por ID
+app.MapGet("/usuarios/{IdUsuario}", (int IdUsuario) =>
+{
+    var usuariobyId = usuarios.FirstOrDefault(usuario => usuario.IdUsuario == IdUsuario);
+    if (usuariobyId != null)
+    {
+        return Results.Ok(usuariobyId); //Codigo 200
+    }
+    else
+    {
+        return Results.NotFound(); //Codigo 404
+    }
+})
+    .WithTags("Usuario");
+
+
+// Actualizar usuarios
+
+app.MapPut("/usuario", ([FromQuery] int IdUsuario, [FromBody] Usuario usuario) =>
+{
+    var usuarioAActualizar = usuarios.FirstOrDefault(alumno => usuario.IdUsuario == IdUsuario);
+    
+    // Verificar si el usuario existe
+    if (usuarioAActualizar == null)
+    {
+        return Results.NotFound(); // 404 Not Found
+    }
+    
+    // Verificar si se está intentando modificar el nombre
+    if (usuario.Nombre != null)
+    {
+        return Results.BadRequest(); // 400 Bad Request
+    }
+    
+    // Modificar las propiedades del usuario (excepto el nombre)
+    usuarioAActualizar.Email = usuario.Email; 
+    usuarioAActualizar.Username = usuario.Username;
+    usuarioAActualizar.Contrasena = usuario.Contrasena;
+    
+    // Devolver 204 No Content si la actualización es exitosa
+    return Results.NoContent(); // 204 No Content
+})
+.WithTags("Alumno");
+
+
 
 app.Run();
