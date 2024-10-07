@@ -17,7 +17,7 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
-//------------------------------------------------ ENDPOINTS ---------------------------------------------
+//-----------------------------------ENDPOINTS USUARIOS-----------------------------------
 
 //Hacer lista de usuarios (Test)
 List<Usuario> usuarios = [
@@ -29,7 +29,8 @@ List<Usuario> usuarios = [
 //CRUD
 
 //Crear un nuevo usuario
-app.MapPost("/usuario", ([FromBody] Usuario usuario) => {
+app.MapPost("/usuario", ([FromBody] Usuario usuario) =>
+{
     // Validar si alguno de los campos del usuario es vacío o null
     if (string.IsNullOrWhiteSpace(usuario.Nombre) ||
         string.IsNullOrWhiteSpace(usuario.Email) ||
@@ -42,7 +43,8 @@ app.MapPost("/usuario", ([FromBody] Usuario usuario) => {
     usuario.Habilitado = true;
     usuarios.Add(usuario);
     return Results.Created($"/usuario/{usuario.IdUsuario}", usuario);
-});
+})
+.WithTags("Usuario");
 
 // Leer usuarios
 
@@ -74,29 +76,131 @@ app.MapGet("/usuarios/{IdUsuario}", (int IdUsuario) =>
 app.MapPut("/usuario", ([FromQuery] int IdUsuario, [FromBody] Usuario usuario) =>
 {
     var usuarioAActualizar = usuarios.FirstOrDefault(alumno => usuario.IdUsuario == IdUsuario);
-    
+
     // Verificar si el usuario existe
     if (usuarioAActualizar == null)
     {
         return Results.NotFound(); // 404 Not Found
     }
-    
+
     // Verificar si se está intentando modificar el nombre
     if (usuario.Nombre != null)
     {
         return Results.BadRequest(); // 400 Bad Request
     }
-    
+
     // Modificar las propiedades del usuario (excepto el nombre)
-    usuarioAActualizar.Email = usuario.Email; 
+    usuarioAActualizar.Email = usuario.Email;
     usuarioAActualizar.Username = usuario.Username;
     usuarioAActualizar.Contrasena = usuario.Contrasena;
-    
+
     // Devolver 204 No Content si la actualización es exitosa
     return Results.NoContent(); // 204 No Content
 })
-.WithTags("Alumno");
+.WithTags("Usuario");
 
 
+// Borrar usuarios 
+
+app.MapDelete("/usuario", ([FromQuery] int IdUsuario) =>
+{
+    var usuarioAEliminar = usuarios.FirstOrDefault(usuario => usuario.IdUsuario == IdUsuario);
+    if (usuarioAEliminar != null)
+    {
+        usuarios.Remove(usuarioAEliminar);
+        return Results.NoContent(); // Código 204
+    }
+    else
+    {
+        return Results.NotFound(); // Código 404
+    }
+})
+.WithTags("Usuario");
+
+//-----------------------------------ENDPOINTS ROLES-----------------------------------
+
+//Hacer lista de usuarios (Test)
+List<Rol> roles = [
+    new Rol{IdRol = 1, Nombre = "Preceptor", Habilitado = true, FechaCreacion= DateTime.Now},
+    new Rol{IdRol = 2, Nombre = "Rector", Habilitado = true, FechaCreacion= DateTime.Now},
+    new Rol{IdRol = 3, Nombre = "Profesor", Habilitado = true, FechaCreacion= DateTime.Now},
+    new Rol{IdRol = 4, Nombre = "Alumno", Habilitado = true, FechaCreacion= DateTime.Now}
+];
+
+// 1. Crear un nuevo Rol
+app.MapPost("/rol", ([FromBody] Rol rol) =>
+{
+    // Validar si alguno de los campos del usuario es vacío o null
+    if (string.IsNullOrWhiteSpace(rol.Nombre))
+    {
+        return Results.BadRequest();
+    }
+    rol.FechaCreacion = DateTime.Now;
+    rol.Habilitado = true;
+    roles.Add(rol);
+    return Results.Created($"/usuario/{rol.IdRol}", rol);
+
+})
+.WithTags("Rol");
+
+// 2. a. Ver todos los datos de todos los roles
+app.MapGet("/roles", () =>
+{
+    return Results.Ok(roles);
+})
+    .WithTags("Rol");
+
+// b.  Mostrar rol por ID
+app.MapGet("/roles/{IdRol}", (int IdRol) =>
+{
+    var rolbyId = roles.FirstOrDefault(rol => rol.IdRol == IdRol);
+    if (rolbyId != null)
+    {
+        return Results.Ok(rolbyId); //Codigo 200
+    }
+    else
+    {
+        return Results.NotFound(); //Codigo 404
+    }
+})
+    .WithTags("Rol");
+
+
+// 3. Modificar Rol excepto el nombre
+app.MapPut("/rol", ([FromQuery] int IdRol, [FromBody] Rol usuario) =>
+{
+    var rolAActualizar = usuarios.FirstOrDefault(alumno => usuario.IdRol == IdRol);
+
+    // Verificar si el rol existe
+    if (rolAActualizar == null)
+    {
+        return Results.NotFound(); // 404 Not Found
+    }
+    // Verificar si se está intentando modificar el nombre
+    if (usuario.Nombre != null)
+    {
+        return Results.BadRequest(); // 400 Bad Request
+    }
+    // Devolver 204 No Content si la actualización es exitosa
+    return Results.NoContent(); // 204 No Content
+})
+.WithTags("Rol");
+
+// 4. Borrar por ID
+
+app.MapDelete("/rol", ([FromQuery] int IdRol) =>
+{
+    var rolAEliminar = roles.FirstOrDefault(rol => rol.IdRol == IdRol);
+    if (rolAEliminar != null)
+    {
+        roles.Remove(rolAEliminar);
+        return Results.NoContent(); // Código 204
+    }
+    else
+    {
+        return Results.NotFound(); // Código 404
+    }
+})
+.WithTags("Rol");
 
 app.Run();

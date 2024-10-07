@@ -31,3 +31,4 @@
 /home/et12alumno/Escritorio/repo/Web-API-Gestion-de-Usuarios/Api/obj/Debug/net8.0/Api.pdb
 /home/et12alumno/Escritorio/repo/Web-API-Gestion-de-Usuarios/Api/obj/Debug/net8.0/Api.genruntimeconfig.cache
 /home/et12alumno/Escritorio/repo/Web-API-Gestion-de-Usuarios/Api/obj/Debug/net8.0/ref/Api.dll
+/home/et12alumno/Escritorio/repo/Web-API-Gestion-de-Usuarios/Api/obj/Debug/net8.0/Api.sourcelink.json
