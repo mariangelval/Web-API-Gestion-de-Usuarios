@@ -73,9 +73,9 @@ app.MapGet("/usuarios/{IdUsuario}", (int IdUsuario) =>
 
 // Actualizar usuarios
 
-app.MapPut("/usuario", ([FromQuery] int IdUsuario, [FromBody] Usuario usuario) =>
+app.MapPut("/usuarios/{IdUsuario}", (int IdUsuario, [FromBody] Usuario usuario) =>
 {
-    var usuarioAActualizar = usuarios.FirstOrDefault(alumno => usuario.IdUsuario == IdUsuario);
+    var usuarioAActualizar = usuarios.FirstOrDefault(usuario => usuario.IdUsuario == IdUsuario);
 
     // Verificar si el usuario existe
     if (usuarioAActualizar == null)
@@ -119,7 +119,7 @@ app.MapDelete("/usuario", ([FromQuery] int IdUsuario) =>
 
 //-----------------------------------ENDPOINTS ROLES-----------------------------------
 
-//Hacer lista de usuarios (Test)
+//Hacer lista de roles (Test)
 List<Rol> roles = [
     new Rol{IdRol = 1, Nombre = "Preceptor", Habilitado = true, FechaCreacion= DateTime.Now},
     new Rol{IdRol = 2, Nombre = "Rector", Habilitado = true, FechaCreacion= DateTime.Now},
@@ -202,5 +202,70 @@ app.MapDelete("/rol", ([FromQuery] int IdRol) =>
     }
 })
 .WithTags("Rol");
+
+/* Usuario-Rol Rol-Usuario
+app.MapPost("/rol/{IdRol}/usuario/{IdUsuario}", (int IdRol, int IdUsuario) =>
+{
+    var rol = roles.FirstOrDefault(rol => rol.IdRol == IdRol);
+    var usuario = usuarios.FirstOrDefault(usuario => usuario.IdUsuario == IdUsuario);
+
+    if (usuario != null && rol != null)
+    {
+        //alumno.Cursos.Add(curso);
+        rol.usuarios.Add(usuario);
+        return Results.Ok();
+    }
+
+    return Results.NotFound();
+})
+    .WithTags("Rol");
+
+app.MapDelete("/rol/{IdRol}/usuario/{IdUsuario}", (int IdRol, int IdUsuario) =>
+{
+    var rol = roles.FirstOrDefault(rol => rol.IdRol == IdRol);
+    var usuario = usuarios.FirstOrDefault(usuario => usuario.IdUsuario == IdUsuario);
+
+    if (usuario != null && rol != null)
+    {
+        // Eliminar el usuario del rol
+        rol.usuarios.Remove(usuario);
+        return Results.Ok();
+    }
+
+    return Results.NotFound();
+})
+    .WithTags("Rol");
+
+app.MapPost("/usuario/{IdUsuario}/rol/{IdRol}", (int IdUsuario, int IdRol) =>
+{
+    var usuario = usuarios.FirstOrDefault(usuario => usuario.IdUsuario == IdUsuario);
+    var rol = roles.FirstOrDefault(rol => rol.IdRol == IdRol);
+
+    if (usuario != null && rol != null)
+    {
+        // Agregar el rol al usuario
+        usuario.Roles.Add(rol);
+        return Results.Ok();
+    }
+
+    return Results.NotFound();
+})
+    .WithTags("Usuario");
+
+app.MapDelete("/usuario/{IdUsuario}/rol/{IdRol}", (int IdUsuario, int IdRol) =>
+{
+    var usuario = usuarios.FirstOrDefault(usuario => usuario.IdUsuario == IdUsuario);
+    var rol = roles.FirstOrDefault(rol => rol.IdRol == IdRol);
+
+    if (usuario != null && rol != null)
+    {
+        // Eliminar el rol del usuario
+        usuario.Roles.Remove(rol);
+        return Results.Ok();
+    }
+
+    return Results.NotFound();
+})
+    .WithTags("Usuario");*/
 
 app.Run();

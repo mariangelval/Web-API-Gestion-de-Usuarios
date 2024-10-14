@@ -4,3 +4,72 @@ GET {{Api_HostAddress}}/weatherforecast/
 Accept: application/json
 
 ###
+//Crear un nuevo usuario
+POST {{Api_HostAddress}}/usuario/
+Content-Type: application/json
+{
+    "nombre": "mari",
+    "email": "mariangel@gmail.com",
+    "username": "mariangelval",
+    "contrasena": "mari123"
+}
+
+// Caso error
+POST {{Api_HostAddress}}/usuario/
+Content-Type: application/json
+{
+    "nombre": "",
+    "email": "mariangel@gmail.com",
+    "username": "mariangelval",
+    "contrasena": "mari123"
+}
+
+###
+// Ver los usuarios (todos)
+GET {{Api_HostAddress}}/usuarios/
+Accept: application/json
+
+###
+// Ver los usuarios por ID
+GET {{Api_HostAddress}}/usuarios/2
+Accept: application/json
+
+###
+// Actualizar usuarios
+PUT {{Api_HostAddress}}/usuarios/2
+Content-Type: application/json
+{
+    "idUsuario": 2,
+    "email" : "lola@gmail.com",
+    "nombre": null,
+    "username":"lolita",
+    "contrasena" : "lol123"
+}
+
+###
+//Borrar usuario por ID
+DELETE {{Api_HostAddress}}/usuario?IdUsuario=2
+Accept: application/json
+
+###
+// Crear rol nuevo
+POST {{Api_HostAddress}}/rol/
+Content-Type: application/json
+{
+    "nombre": "Regente"
+}
+
+###
+// Ver roles (todos)
+GET {{Api_HostAddress}}/roles/
+Accept: application/json
+
+###
+// Ver roles por ID
+GET {{Api_HostAddress}}/roles/2
+Accept: application/json
+
+###
+// Borrar por ID
+DELETE {{Api_HostAddress}}/rol?IdRol=2
+Accept: application/json
