@@ -70,6 +70,6 @@ GET {{Api_HostAddress}}/roles/2
 Accept: application/json
 
 ###
-// Borrar por ID
+// Borrar rol por ID
 DELETE {{Api_HostAddress}}/rol?IdRol=2
 Accept: application/json
